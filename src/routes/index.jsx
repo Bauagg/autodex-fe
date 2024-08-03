@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom"
 
 //Componen 
-import Login from "../pages/login"
 import MenuBar from "../pages/MenuBar/index"
+import Register from "../pages/register"
 
 
 const IndexRouter = () => {
@@ -10,7 +10,7 @@ const IndexRouter = () => {
         <div>
             <Routes>
                 <Route path="/menu" element={<MenuBar />} />
-                <Route path="/" element={<Login />} />
+                <Route path="/" element={<Register />} />
             </Routes>
         </div>
     )
