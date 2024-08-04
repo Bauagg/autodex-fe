@@ -1,0 +1,13 @@
+.menuNavbar:hover .icon_item path {
+    fill: #8A7ED8;
+}
+
+.custom-text {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.borderProfile {
+    border-color: rgba(255, 255, 255, 0.08);
+}
