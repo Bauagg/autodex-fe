@@ -15,7 +15,7 @@ const Register = () => {
         <div className="bg-custom w-full min-h-[500px] relative sm:max-w-[808px] sm:h-[983px]  rounded-lg flex justify-center items-center   ">
           <div className=" text-white absolute flex flex-col justify-between w-full sm:max-w-[748px] sm:h-[905px] p-5 h-[480px] ">
             <h1 className="capitalize text-2xl sm:text-5xl">logo</h1>
-            <div className="bg-[rgba(0,0,0,0.6)] p-5  rounded-lg">
+            <div className="bg-[rgba(0,0,0,0.6)] p-5 sm:p-7  rounded-lg">
               <h1 className=" mb-6 text-xl  sm:text-4xl">
                 Bergabunglah dengan Komunitas <br />
                 BIM Kami
