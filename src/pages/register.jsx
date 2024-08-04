@@ -108,7 +108,8 @@ const Register = () => {
               Daftar
             </button>
             <p className="mb-6 text-center">
-              Apakah anda sudah punya aku ? <span>Masuk</span>
+              Apakah anda sudah punya aku ?{" "}
+              <span className="text-bold">Masuk</span>
             </p>
           </form>
         </div>
