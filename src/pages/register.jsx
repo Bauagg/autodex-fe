@@ -1,14 +1,112 @@
+import axios from "axios";
 import "./style-login.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import gambar from "./logoRegister.jpeg";
 
 const Register = () => {
   const [nama, setNama] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [konfirmasiPassword, setKonfirmasiPassword] = useState("");
+  const [namaError, setNamaError] = useState(false)
+  const [emailError, setEmailError] = useState(false)
+  const [passwordError, setPasswordError] = useState(false)
+  const [konfirmasi_password_error, set_konfirmasi_password_error] = useState(false)
+  const [messageNameError, setMessageNameError] = useState('')
+  const [messageEmailError, setMessageEmailError] = useState('')
+  const [messagePasswordError, setMessagePasswordError] = useState('')
+  const [messageKonfirmasiPasswordError, setMessageKonfirmasiPassword] = useState('')
   const navigate = useNavigate();
+
+  const handleNameChange = (value) => {
+    setNama(value)
+    setMessageNameError('')
+    if (!value) {
+      setNamaError(true)
+    } else {
+      setNamaError(false)
+    }
+  }
+
+  const hendleEmailChange = (value) => {
+    const regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    setEmail(value);
+    setMessageEmailError('')
+    if (!regexEmail.test(value)) {
+      setEmailError(true);
+    } else {
+      setEmailError(false);
+    }
+  }
+
+  const handlePasswordChange = (value) => {
+    setPassword(value);
+    setMessagePasswordError('')
+    if (value.length < 8) {
+      setPasswordError(true);
+    } else {
+      setPasswordError(false);
+    }
+  }
+
+  const handleKonfirmasiPassword = (value) => {
+    setKonfirmasiPassword(value)
+    setMessageKonfirmasiPassword('')
+    if (value !== password) {
+      set_konfirmasi_password_error(true)
+    } else if (value.length < 8) {
+      set_konfirmasi_password_error(true)
+    } else {
+      set_konfirmasi_password_error(false)
+    }
+  }
+
+  const hendleRegister = (e) => {
+    e.preventDefault();
+
+    if (!nama) {
+      setNamaError(true);
+      setMessageNameError('Nama tidak boleh kosong');
+      return;
+    }
+
+    const regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    if (!email || !regexEmail.test(email)) {
+      setEmailError(true)
+      setMessageEmailError('Email tidak valid')
+      return
+    }
+
+    if (!password || password < 8) {
+      setPasswordError(true);
+      setMessagePasswordError('Kata sandi tidak valid')
+      return
+    }
+
+
+    if (!konfirmasiPassword || konfirmasiPassword.length < 8 || konfirmasiPassword !== password) {
+      set_konfirmasi_password_error(true);
+      if (konfirmasiPassword !== password) {
+        return setMessageKonfirmasiPassword("Kata sandi tidak cocok");
+      }
+      return setMessageKonfirmasiPassword("Kata sandi konfirmasi tidak valid");
+    }
+
+    const data = { name: nama, email, password, konfirmasi_password: konfirmasiPassword }
+
+    axios.post(`${process.env.REACT_APP_API_URL}/api/register`, data)
+      .then(() => {
+        navigate('/')
+      })
+      .catch((err) => {
+        if (err.response.data.message === 'email sudah terdaftar') {
+          setEmailError(true)
+          setMessageEmailError('Email sudah terdaftar')
+          return
+        }
+      })
+  }
+
   return (
     <div className="bg-white  flex flex-col sm:flex-row justify-center gap-5 p-4 max-w-screen-xl mx-auto">
       <div className="flex justify-center rounded-lg sm:w-[65%]  ">
@@ -36,7 +134,7 @@ const Register = () => {
           <p className="mb-6">
             Buat akun dan mulai jelajahi fitur-fitur kami yang menarik.
           </p>
-          <form className="">
+          <form onSubmit={hendleRegister}>
             <div className="mb-4">
               <label
                 htmlFor="nama"
@@ -48,10 +146,11 @@ const Register = () => {
                 type="text"
                 id="nama"
                 value={nama}
-                onChange={(e) => setNama(e.target.value)}
+                onChange={(e) => handleNameChange(e.target.value)}
                 required
-                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className={`mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${namaError ? 'border-red-500' : 'border-gray-300'}`}
               />
+              {messageNameError && (<p className="text-red-500 text-xs">{messageNameError}</p>)}
             </div>
             <div className="mb-4">
               <label
@@ -64,10 +163,11 @@ const Register = () => {
                 type="email"
                 id="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => hendleEmailChange(e.target.value)}
                 required
-                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className={`mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${emailError ? 'border-red-500' : 'border-gray-300'}`}
               />
+              {messageEmailError && (<p className="text-red-500 text-xs">{messageEmailError}</p>)}
             </div>
             <div className="mb-6">
               <label
@@ -80,10 +180,11 @@ const Register = () => {
                 type="password"
                 id="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => handlePasswordChange(e.target.value)}
                 required
-                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className={`mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${passwordError ? 'border-red-500' : 'border-gray-300'}`}
               />
+              {messagePasswordError && (<p className="text-red-500 text-xs">{messagePasswordError}</p>)}
             </div>
             <div className="mb-6">
               <label
@@ -96,10 +197,11 @@ const Register = () => {
                 type="password"
                 id="konfirmasi_password"
                 value={konfirmasiPassword}
-                onChange={(e) => setKonfirmasiPassword(e.target.value)}
+                onChange={(e) => handleKonfirmasiPassword(e.target.value)}
                 required
-                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className={`mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${konfirmasi_password_error ? 'border-red-500' : 'border-gray-300'}`}
               />
+              {messageKonfirmasiPasswordError && (<p className="text-red-500 text-xs">{messageKonfirmasiPasswordError}</p>)}
             </div>
             <button
               type="submit"

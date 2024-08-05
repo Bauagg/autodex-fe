@@ -2,7 +2,7 @@ import axios from "axios";
 import "./style-login.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import gambar from "./logoRegister.jpeg";
+import Cookies from "js-cookie";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -15,42 +15,56 @@ const Login = () => {
 
     const hendleEmailChange = (value) => {
         const regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        setEmail(value);
+        setMessageEmailError('')
         if (!regexEmail.test(value)) {
             setEmailError(true);
         } else {
             setEmailError(false);
-            setEmail(value);
         }
     }
 
     const handlePasswordChange = (value) => {
+        setPassword(value);
+        setMessagePasswordError('')
         if (value.length < 8) {
             setPasswordError(true);
-            setPassword(value);
         } else {
             setPasswordError(false);
         }
     }
 
-    const handleLogin = () => {
-        if (!email) {
+    const handleLogin = (e) => {
+        e.preventDefault();
+
+        const regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        if (!email || !regexEmail.test(email)) {
             setEmailError(true)
-            return setMessageEmailError('Email tidak valid')
+            setMessageEmailError('Email tidak valid')
+            return
         }
 
-        if (!password) {
+        if (!password || password < 8) {
             setPasswordError(true);
-            return setMessagePasswordError('Kata sandi tidak valid')
+            setMessagePasswordError('Kata sandi tidak valid')
+            return
         }
 
         const data = { email, password }
 
         axios.post(`${process.env.REACT_APP_API_URL}/api/login`, data)
             .then((result) => {
-                console.log(result.data)
+                Cookies.set('token', result.data.datas.token, { expires: 3 });
+                navigate('/menu');
             })
             .catch((err) => {
-                console.log(err)
+
+                if (err.response.data.message === 'Email dan Password salah') {
+                    setEmailError(true)
+                    setPasswordError(true)
+                    setMessageEmailError('Email dan Password salah')
+                    setMessagePasswordError('Email dan Password salah')
+                }
             })
     }
 
@@ -81,7 +95,7 @@ const Login = () => {
                     <p className="mb-6">
                         Masukkan detail akun Anda untuk melanjutkan
                     </p>
-                    <form className="">
+                    <form onSubmit={handleLogin}>
                         <div className="mb-4">
                             <label
                                 htmlFor="email"
@@ -97,7 +111,7 @@ const Login = () => {
                                 required
                                 className={`mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${emailError ? 'border-red-500' : 'border-gray-300'}`}
                             />
-                            <p className="text-red-500">Email tidak valid</p>
+                            {messageEmailError && (<p className="text-red-500 text-xs">Email tidak valid</p>)}
                         </div>
                         <div className="mb-6">
                             <label
@@ -114,6 +128,7 @@ const Login = () => {
                                 required
                                 className={`mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${passwordError ? 'border-red-500' : 'border-gray-300'}`}
                             />
+                            {messagePasswordError && <p className="text-red-500 text-xs">Kata sandi tidak valid</p>}
                         </div>
                         <button
                             type="submit"

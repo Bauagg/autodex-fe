@@ -1,11 +1,18 @@
 import './style-menu.css'
 import { useState } from "react"
+import { useNavigate } from 'react-router-dom'
+import Cookies from 'js-cookie'
 import { DashboardIcon, SimpleIcon, LeftIcon, RightIcon, LogoutIcon } from "../../GlobalComponent/icon"
 
 const MenuBar = () => {
     const [activeMenu, setActiceMenu] = useState("Dashboard")
     const [miniNav, setMiniNav] = useState(false)
+    const navigate = useNavigate();
 
+    const handleLogout = () => {
+        Cookies.remove('token');
+        navigate('/');
+    }
 
     return (
         <div className="flex bg-[#171821] w-full">
@@ -42,7 +49,7 @@ const MenuBar = () => {
                 </div>
                 <div className="mt-[97px]">
                     <p className='text-[#ffff] mb-[14px]'>Other</p>
-                    <div onClick={() => setActiceMenu("Setting")}
+                    <div onClick={handleLogout}
                         className={`hover:bg-[rgba(250,250,250,0.06)] hover:text-[#8A7ED8] flex items-center cursor-pointer gap-[10px] px-[16px] py-[12px] rounded-[12px] text-[14px] font-medium duration-300 menuNavbar ${activeMenu === "Setting" ? "text-[#8A7ED8] pl-[40px] bg-[rgba(250,250,250,0.06)]" : "text-[#B1B7C4]"}`}>
                         < LogoutIcon className='icon_item' color={activeMenu === "Setting" ? "#8A7ED8" : "#B1B7C4"} />
                         <p className={miniNav ? "hidden" : ""}>Logout</p>
@@ -52,11 +59,9 @@ const MenuBar = () => {
             <div className="flex items-center justify-center flex-grow bg-[#fff]">
                 {activeMenu === "Dashboard" ? (
                     <p>Dashboard Component Here</p>
-                ) : activeMenu === "SimpleViewer" ? (
+                ) : activeMenu === "SimpleViewer" && (
                     <p>SimpleViewer Component Here</p>
-                ) : activeMenu === "Setting" ? (
-                    <p>Setting Component Here</p>
-                ) : null}
+                )}
             </div>
         </div>
     )
