@@ -1,6 +1,7 @@
 import './style-menu.css'
 import { useState } from "react"
 import { DashboardIcon, SimpleIcon, LeftIcon, RightIcon, LogoutIcon } from "../../GlobalComponent/icon"
+import DashboardPage from '../Dashboard'
 
 const MenuBar = () => {
     const [activeMenu, setActiceMenu] = useState("Dashboard")
@@ -9,7 +10,7 @@ const MenuBar = () => {
 
     return (
         <div className="flex bg-[#171821] w-full">
-            <div className={`h-[100vh] pt-[50px] px-[24px] bg-[#171821] ${miniNav ? "w-[130px]" : "w-[270px]"}`}>
+            <div className={`pt-[50px] px-[24px] bg-[#171821] ${miniNav ? "w-[130px]" : "w-[270px]"}`}>
                 <div className="flex justify-end px-[17px] duration-300">
                     {miniNav ? (
                         <div onClick={() => setMiniNav(false)}>
@@ -51,7 +52,7 @@ const MenuBar = () => {
             </div>
             <div className="flex items-center justify-center flex-grow bg-[#fff]">
                 {activeMenu === "Dashboard" ? (
-                    <p>Dashboard Component Here</p>
+                    <DashboardPage/>
                 ) : activeMenu === "SimpleViewer" ? (
                     <p>SimpleViewer Component Here</p>
                 ) : activeMenu === "Setting" ? (
