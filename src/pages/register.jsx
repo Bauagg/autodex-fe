@@ -109,7 +109,7 @@ const Register = () => {
             </button>
             <p className="mb-6 text-center">
               Apakah anda sudah punya aku ?{" "}
-              <span className="font-bold">Masuk</span>
+              <span className="font-bold cursor-pointer" onClick={() => navigate('/')}>Masuk</span>
             </p>
           </form>
         </div>
