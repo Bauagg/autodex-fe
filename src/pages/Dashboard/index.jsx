@@ -1,7 +1,45 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import { IconBell, IconTotalProject, UploadFileIcon, UploadIcon, FileProjectIcon, BlueprintIcon } from '../../GlobalComponent/icon';
+import axios from 'axios';
 
 const DashboardPage = () => {
+  const [models, setModels] = useState([]);
+  const [selectedUrn, setSelectedUrn] = useState('');
+
+  useEffect(() => {
+    const fetchModels = async () => {
+      try {
+        const resp = await axios.get(`${process.env.REACT_APP_API_URL}/api/models`);
+        setModels(resp.data);
+      } catch (err) {
+        alert('Could not list models. See the console for more details.');
+        console.error(err);
+      }
+    };
+    fetchModels();
+  }, []);
+
+  const handleModelChange = (event) => {
+    setSelectedUrn(event.target.value);
+  };
+
+  const handleUpload = async (event) => {
+    const file = event.target.files[0];
+    let data = new FormData();
+    data.append('model-file', file);
+    if (file.name.endsWith('.zip')) {
+      const entrypoint = window.prompt('Please enter the filename of the main design inside the archive.');
+      data.append('model-zip-entrypoint', entrypoint);
+    }
+    try {
+      const resp = await axios.post(`${process.env.REACT_APP_API_URL}/api/models`, data);
+      setModels((prevModels) => [...prevModels, resp.data]);
+      setSelectedUrn(resp.data.urn);
+    } catch (err) {
+      alert(`Could not upload model ${file.name}. See the console for more details.`);
+      console.error(err);
+    }
+  };
 
   const datas = [
     {

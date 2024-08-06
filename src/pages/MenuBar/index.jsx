@@ -1,19 +1,39 @@
 import './style-menu.css'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import { DashboardIcon, SimpleIcon, LeftIcon, RightIcon, LogoutIcon } from "../../GlobalComponent/icon"
 import DashboardPage from '../Dashboard'
-import Viewer from '../Viewer'
+import axios from 'axios'
+import ViewerAutodex from '../Viewer'
 
 const MenuBar = () => {
     const [activeMenu, setActiceMenu] = useState("Dashboard")
     const [miniNav, setMiniNav] = useState(false)
+    const [dataProfile, setDataProfile] = useState({})
     const navigate = useNavigate();
+
+    useEffect(() => {
+        axios.get(`${process.env.REACT_APP_API_URL}/api/profil`, { headers: { Authorization: `Bearer ${Cookies.get('token')}` } })
+            .then((result) => {
+                console.log(result.data)
+                setDataProfile(result.data.data)
+            })
+            .catch((err) => console.log(err))
+    }, [])
 
     const handleLogout = () => {
         Cookies.remove('token');
         navigate('/');
+    }
+
+    const renderProfileName = () => {
+        const nameParts = dataProfile.name ? dataProfile.name.split(' ') : [];
+        if (nameParts.length > 1) {
+            nameParts.pop();
+            return nameParts.join(' ');
+        }
+        return dataProfile.name;
     }
 
     return (
@@ -35,7 +55,7 @@ const MenuBar = () => {
                         <div className="w-full mt-[30px] py-[10px] px-[15px] text-[#fff] flex gap-[15px] items-center border-b-2 borderProfile pb-[32px]">
                             <div className='w-[42px] h-[42px] rounded-full bg-[#D9D9D9] cursor-pointer'></div>
                             <div className={`${miniNav ? "hidden" : "font-medium text-[15px] cursor-pointer"}`}>
-                                <p>A. Mambaus</p>
+                                <p>{renderProfileName()}</p>
                                 <p className='custom-text'>View profile</p>
                             </div>
                         </div>
@@ -62,11 +82,8 @@ const MenuBar = () => {
                     </div>
                 </div>
                 <div className={`items-center justify-center flex-grow bg-[#fff] ${miniNav === false && 'w-4/5'}`}>
-                    {activeMenu === "Dashboard" ? (
-                        <DashboardPage />
-                    ) : activeMenu === "SimpleViewer" && (
-                        <Viewer />
-                    )}
+                    {activeMenu === "Dashboard" && <DashboardPage />}
+                    {activeMenu === "SimpleViewer" && <ViewerAutodex />}
                 </div>
             </div>
         </div >
