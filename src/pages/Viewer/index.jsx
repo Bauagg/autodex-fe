@@ -6,17 +6,19 @@ const ViewerAutodex = () => {
     const [models, setModels] = useState([]);
     const [selectedUrn, setSelectedUrn] = useState('');
 
-    useEffect(() => {
-        const fetchModels = async () => {
-            try {
-                const resp = await axios.get(`${process.env.REACT_APP_API_URL}/api/models`);
-                setModels(resp.data);
-            } catch (err) {
+    const getModels = async () => {
+        await axios.get(`${process.env.REACT_APP_API_URL}/api/models`).then((res) => {
+            console.log(res);
+            setModels(res.data);
+        }).
+            catch((err) => {
                 alert('Could not list models. See the console for more details.');
                 console.error(err);
-            }
-        };
-        fetchModels();
+            })
+    }
+
+    useEffect(() => {
+        getModels();
     }, []);
 
     const handleModelChange = (event) => {
@@ -30,11 +32,12 @@ const ViewerAutodex = () => {
                     <div id="header">
                         <select id="models" value={selectedUrn} onChange={handleModelChange} className="border rounded p-2">
                             {models.map(model => (
-                                <option key={model.urn} value={model.urn} className=''>
+                                <option key={model.urn} value={model.urn}>
                                     {model.name}
                                 </option>
                             ))}
                         </select>
+
                     </div>
                 </div>
             </section>
