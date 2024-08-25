@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IconBell, IconTotalProject, UploadFileIcon, UploadIcon, FileProjectIcon, BlueprintIcon } from '../../GlobalComponent/icon';
+import { IconBell, EyeIcon, TrashIcon, IconTotalProject, UploadFileIcon, UploadIcon, FileProjectIcon, BlueprintIcon } from '../../GlobalComponent/icon';
 import axios from 'axios';
 
 const DashboardPage = () => {
@@ -57,11 +57,11 @@ const DashboardPage = () => {
       name: 'File Project',
       num: 10,
     },
-    {
-      icon: <UploadFileIcon />,
-      name: 'Upload New File',
-      num: null,
-    },
+    // {
+    //   icon: <UploadFileIcon />,
+    //   name: 'Upload New File',
+    //   num: null,
+    // },
   ]
 
   return (
@@ -87,7 +87,7 @@ const DashboardPage = () => {
           )
         })}
       </section>
-      <section className='mt-5 w-full h-auto py-[19px] px-[36px]'>
+      <section className='mt-5 w-full h-auto py-[19px]'>
         <div className='w-full flex justify-between mb-[19px]'>
           <div className='flex flex-col'>
             <p className='font-semibold text-[15px] text-[#171821] capitalize'>File History</p>
@@ -98,8 +98,8 @@ const DashboardPage = () => {
             <p className='font-semibold text-sm text-[#FFFF] capitalize ml-2'>Upload New File</p>
           </div>
         </div>
-        <div className='bg-[#EBEBEB] w-full h-[24px] rounded-lg py-4 px-6 flex items-center mb-2'>
-          <div className='mr-[533px]'>
+        <div className='bg-[#EBEBEB] w-full rounded-lg py-4 px-6 flex justify-between mb-2'>
+          <div className=''>
             <p className='font-semibold text-[16px] text-[#171821] capitalize'>File Project</p>
           </div>
           <div>
@@ -108,7 +108,7 @@ const DashboardPage = () => {
         </div>
         {[1, 2, 3, 4, 5, 6].map((i) => {
           return (
-            <div key={i} className='w-full flex justify-between mb-[19px] py-[18px] px-[24px]'>
+            <div key={i} className='w-full flex justify-between mb-[19px] py-[18px] px-[24px] hover:bg-[#EBEBEB] duration-300 rounded-[8px]'>
               <div className='flex justify-center'>
                 <div className='mr-[10px]'>
                   <BlueprintIcon />
@@ -118,8 +118,14 @@ const DashboardPage = () => {
                   <p className='font-semibold text-[12px] text-[#171821] capitalize'>1.5 GB</p>
                 </div>
               </div>
-              <div className='flex items-center'>
-                <p className='font-normal text-[16px] text-[#171821] '>rimazakiyatin@gmail.com</p>
+              <div className='flex items-center gap-[12px] items-center'>
+                <div className='cursor-pointer flex gap-[8px] items-center hover:bg-[#fff] duration-300 px-[12px] py-[4px] rounded-[4px]'>
+                  <EyeIcon />
+                  <p>View</p>
+                </div>
+                <div className='hover:bg-[#fff] duration-300 p-[4px] rounded-[4px]'>
+                  <TrashIcon />
+                </div>
               </div>
             </div>
           )
