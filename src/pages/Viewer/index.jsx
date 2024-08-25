@@ -25,12 +25,12 @@ const ViewerAutodex = () => {
 
     return (
         <div className="w-full h-full bg-[#FFFF] py-8 px-8 ">
-            <section className='flex justify-between items-center mb-10'>
+            <section className='flex justify-between items-center mb-2'>
                 <div>
                     <div id="header">
                         <select id="models" value={selectedUrn} onChange={handleModelChange} className="border rounded p-2">
                             {models.map(model => (
-                                <option key={model.urn} value={model.urn}>
+                                <option key={model.urn} value={model.urn} className=''>
                                     {model.name}
                                 </option>
                             ))}
