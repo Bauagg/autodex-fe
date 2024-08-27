@@ -100,21 +100,22 @@ const DashboardPage = () => {
       }
     })
       .then((res) => {
-        window.location.reload();       })
+        window.location.reload();
+      })
       .catch((err) => {
         console.error("Error uploading file:", err);
       });
   };
-  const handleRemoveFile = (name) =>{
+  const handleRemoveFile = (name) => {
     axios.delete(`${process.env.REACT_APP_API_URL}/api/models/${name}`)
-    .then((res)=>{
-      window.location.reload(); 
-    }).catch((err)=>{
-      console.log(err);
-    })
+      .then((res) => {
+        window.location.reload();
+      }).catch((err) => {
+        console.log(err);
+      })
   }
   console.log(models);
-  
+
   useEffect(() => {
     getModels();
   }, [selectedFile]);
@@ -172,9 +173,8 @@ const DashboardPage = () => {
         {models.map((item, index) => {
           return (
             <div
-            onClick={()=>navigate(`/view/${index + 1}`,  { state: item.urn })}
-             key={item}
-             className='w-full flex justify-between mb-[19px] py-[18px] px-[24px] hover:bg-[#EBEBEB] duration-300 rounded-[8px]'>
+              key={item}
+              className='w-full flex justify-between mb-[19px] py-[18px] px-[24px] hover:bg-[#EBEBEB] duration-300 rounded-[8px]'>
               <div className='flex justify-center'>
                 <div className='mr-[10px]'>
                   <BlueprintIcon />
@@ -185,13 +185,15 @@ const DashboardPage = () => {
                 </div>
               </div>
               <div className='flex items-center gap-[12px] items-center'>
-                <div className='cursor-pointer flex gap-[8px] items-center hover:bg-[#fff] duration-300 px-[12px] py-[4px] rounded-[4px]'>
+                <div
+                  onClick={() => navigate(`/view/${index + 1}`, { state: item.urn })}
+                  className='cursor-pointer flex gap-[8px] items-center hover:bg-[#fff] duration-300 px-[12px] py-[4px] rounded-[4px]'>
                   <EyeIcon />
                   <p>View</p>
                 </div>
                 <div
-                onClick={()=>handleRemoveFile(item.name)}
-                 className='hover:bg-[#fff] duration-300 p-[4px] rounded-[4px]'>
+                  onClick={() => handleRemoveFile(item.name)}
+                  className='hover:bg-[#fff] duration-300 p-[4px] rounded-[4px]'>
                   <TrashIcon />
                 </div>
               </div>
