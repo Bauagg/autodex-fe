@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { IconBell, EyeIcon, TrashIcon, IconTotalProject, UploadFileIcon, UploadIcon, FileProjectIcon, BlueprintIcon } from '../../GlobalComponent/icon';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const DashboardPage = () => {
   const [models, setModels] = useState([]);
@@ -64,6 +65,59 @@ const DashboardPage = () => {
     // },
   ]
 
+  const getModels = async () => {
+    await axios.get(`${process.env.REACT_APP_API_URL}/api/models`).then((res) => {
+      console.log(res);
+      setModels(res.data);
+    }).
+      catch((err) => {
+        alert('Could not list models. See the console for more details.');
+        console.error(err);
+      })
+  }
+
+  //-------------------------------------------handle Upload----------------------------------------------------
+  const [selectedFile, setSelectedFile] = useState(null);
+  const navigate = useNavigate()
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file && file.name.endsWith(".nwd")) {
+      setSelectedFile(file);
+      uploadFile(file);
+    } else {
+      alert("Please select a file with a .nwd extension");
+    }
+  };
+
+  const uploadFile = (file) => {
+    const formData = new FormData();
+    formData.append('modelFile', file);
+
+    axios.post(`${process.env.REACT_APP_API_URL}/api/models`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    })
+      .then((res) => {
+        window.location.reload();       })
+      .catch((err) => {
+        console.error("Error uploading file:", err);
+      });
+  };
+  const handleRemoveFile = (name) =>{
+    axios.delete(`${process.env.REACT_APP_API_URL}/api/models/${name}`)
+    .then((res)=>{
+      window.location.reload(); 
+    }).catch((err)=>{
+      console.log(err);
+    })
+  }
+  console.log(models);
+  
+  useEffect(() => {
+    getModels();
+  }, [selectedFile]);
   return (
     <main className='w-full h-screen bg-[#FFFF] py-[30px] px-[30px]'>
       <section className='flex justify-between items-center mb-10'>
@@ -93,9 +147,18 @@ const DashboardPage = () => {
             <p className='font-semibold text-[15px] text-[#171821] capitalize'>File History</p>
             <p className='font-semibold text-[10px] text-[#171821] capitalize'>13 Jan - 13 Feb 2025</p>
           </div>
-          <div className='flex justify-center items-center bg-[#171821] py-1 pr-4 pl-5 rounded-xl'>
-            <UploadFileIcon />
-            <p className='font-semibold text-sm text-[#FFFF] capitalize ml-2'>Upload New File</p>
+          <div className='flex justify-center items-center bg-[#171821] py-1 pr-4 pl-5 rounded-xl cursor-pointer'>
+            <label htmlFor="file-upload" className="flex items-center cursor-pointer">
+              <UploadFileIcon />
+              <p className='font-semibold text-sm text-[#FFFF] capitalize ml-2'>Upload New File</p>
+            </label>
+            <input
+              id="file-upload"
+              type="file"
+              accept=".nwd"
+              onChange={handleFileChange}
+              style={{ display: 'none' }} // Hide the actual input element
+            />
           </div>
         </div>
         <div className='bg-[#EBEBEB] w-full rounded-lg py-4 px-6 flex justify-between mb-2'>
@@ -106,15 +169,18 @@ const DashboardPage = () => {
             <p className='font-semibold text-[16px] text-[#171821] capitalize'>Uploaded by</p>
           </div>
         </div>
-        {[1, 2, 3, 4, 5, 6].map((i) => {
+        {models.map((item, index) => {
           return (
-            <div key={i} className='w-full flex justify-between mb-[19px] py-[18px] px-[24px] hover:bg-[#EBEBEB] duration-300 rounded-[8px]'>
+            <div
+            onClick={()=>navigate(`/view/${index + 1}`,  { state: item.urn })}
+             key={item}
+             className='w-full flex justify-between mb-[19px] py-[18px] px-[24px] hover:bg-[#EBEBEB] duration-300 rounded-[8px]'>
               <div className='flex justify-center'>
                 <div className='mr-[10px]'>
                   <BlueprintIcon />
                 </div>
                 <div className='flex-col'>
-                  <p className='font-semibold text-[16px] text-[#171821] capitalize'>File 1 3D</p>
+                  <p className='font-semibold text-[16px] text-[#171821] capitalize'>{item.name}</p>
                   <p className='font-semibold text-[12px] text-[#171821] capitalize'>1.5 GB</p>
                 </div>
               </div>
@@ -123,7 +189,9 @@ const DashboardPage = () => {
                   <EyeIcon />
                   <p>View</p>
                 </div>
-                <div className='hover:bg-[#fff] duration-300 p-[4px] rounded-[4px]'>
+                <div
+                onClick={()=>handleRemoveFile(item.name)}
+                 className='hover:bg-[#fff] duration-300 p-[4px] rounded-[4px]'>
                   <TrashIcon />
                 </div>
               </div>

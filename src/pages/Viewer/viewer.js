@@ -61,7 +61,7 @@ const Viewer = ({ selectedUrn }) => {
     }, [viewer, selectedUrn]);
 
     return (
-        <div className="viewer-wrapper">
+        <div className="viewer-wrapper h-[100vh]">
             <div ref={viewerContainer} className='viewer-container'></div>
         </div>
     );
