@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import './viewe.css';
+import { useNavigate } from 'react-router-dom';
 
 async function getAccessToken(callback) {
     try {
@@ -43,8 +44,8 @@ const loadModel = (viewer, urn) => {
         Autodesk.Viewing.Document.load('urn:' + urn, onDocumentLoadSuccess, onDocumentLoadFailure);
     });
 }
-
 const Viewer = ({ selectedUrn }) => {
+    const navigate= useNavigate()
     const viewerContainer = useRef(null);
     const [viewer, setViewer] = useState(null);
 
@@ -61,7 +62,8 @@ const Viewer = ({ selectedUrn }) => {
     }, [viewer, selectedUrn]);
 
     return (
-        <div className="viewer-wrapper h-[100vh]">
+        <div className="viewer-wrapper h-[100vh] relative">
+            <div onClick={()=>navigate(-1)} className='absolute z-50 cursor-pointer left-5 top-5 px-[16px] py-[4px] rounded-full bg-[#171821] text-[#fff]'>Kembali</div>
             <div ref={viewerContainer} className='viewer-container'></div>
         </div>
     );
