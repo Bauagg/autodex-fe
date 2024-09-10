@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   IconBell,
   IconTotalProject,
@@ -6,16 +6,59 @@ import {
   TrashIcon,
 } from '../../GlobalComponent/icon';
 import ModalCreateProject from '../Modals';
+import Cookies from "js-cookie";
+import axios from 'axios';
 
 const FolderProject = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [dataProject, setDataProject] = useState([])
+  const [totalProject, setTotalProject] = useState(0)
+  const token = Cookies.get('token');
+
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_API_URL}/api/projek`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => {
+        setDataProject(res.data.datas)
+        setTotalProject(res.data.total_projek)
+
+      })
+      .catch((err) => {
+        console.log(err)
+        alert('Could not list models. See the console for more details.');
+      })
+  }, [isModalOpen, token])
+
+  const deleteProject = (id) => {
+
+    axios.delete(`${process.env.REACT_APP_API_URL}/api/projek/${id}`,
+      { headers: { Authorization: `Bearer ${token}` } })
+      .then(() => {
+        // Fetch project data again after deletion
+        axios.get(`${process.env.REACT_APP_API_URL}/api/projek`,
+          { headers: { Authorization: `Bearer ${token}` } })
+          .then((res) => {
+            setDataProject(res.data.datas);
+            setTotalProject(res.data.total_projek);
+          })
+          .catch((err) => {
+            console.log('Error fetching projects after deletion:', err);
+            alert('Could not list models. See the console for more details.');
+          });
+      })
+      .catch((err) => {
+        console.log('Error deleting project:', err); // Debugging error
+        alert('Could not delete project. See the console for more details.');
+      });
+  }
+
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
 
   return (
     <main className="w-full h-screen bg-[#FFFF] py-[30px] px-[30px]">
-        <ModalCreateProject isOpen={isModalOpen} onClose={closeModal} />
+      <ModalCreateProject isOpen={isModalOpen} onClose={closeModal} />
       <section className="flex justify-between items-center mb-10">
         <p className="font-semibold text-2xl text-[#171821] capitalize">
           dashboard
@@ -34,7 +77,7 @@ const FolderProject = () => {
               Total Project
             </p>
             <p className="font-semibold text-2xl text-[#171821] capitalize">
-              10
+              {totalProject}
             </p>
           </div>
         </div>
@@ -44,7 +87,7 @@ const FolderProject = () => {
         <div onClick={openModal} className="py-[19px] px-9 h-[102px] w-full border border-[#EBEBEB] flex justify-start items-center rounded-xl cursor-pointer">
           <div className="w-[177px] h-[44px] rounded-xl bg-[#171821] border-[.7px] border-[#EAEBED] flex items-center">
             <div className="w-[34px] h-[34px] rounded-full flex items-center ml-5 mr-[10px]">
-              <CreateProjectIcon/>
+              <CreateProjectIcon />
             </div>
             <p className="font-sans font-semibold text-sm text-[#FFFFFF] capitalize">
               Create Project
@@ -54,7 +97,7 @@ const FolderProject = () => {
       </section>
       {/* ----- */}
       <section className="grid grid-cols-3 gap-4">
-        {[1, 2, 3, 4, 5, 6].map((i) => {
+        {dataProject.map((i) => {
           return (
             <div
               key={i}
@@ -65,10 +108,10 @@ const FolderProject = () => {
                   <IconTotalProject />
                 </div>
                 <p className="font-sans font-semibold text-2xl text-gray-800 capitalize">
-                  Project A
+                  {i.nama_folder}
                 </p>
               </div>
-              <TrashIcon />
+              <span onClick={() => deleteProject(i._id)}><TrashIcon /></span>
             </div>
           );
         })}
