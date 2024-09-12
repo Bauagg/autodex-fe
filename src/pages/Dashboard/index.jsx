@@ -29,7 +29,6 @@ const FolderProject = () => {
   }, [isModalOpen, token])
 
   const deleteProject = (id) => {
-
     axios.delete(`${process.env.REACT_APP_API_URL}/api/projek/${id}`,
       { headers: { Authorization: `Bearer ${token}` } })
       .then(() => {
