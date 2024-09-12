@@ -124,6 +124,7 @@ export const IconBell = () => (
   </svg>
 );
 
+
 export const IconTotalProject = () => (
   <svg
     width="46"

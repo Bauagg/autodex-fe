@@ -8,12 +8,16 @@ import {
 import ModalCreateProject from '../Modals';
 import Cookies from "js-cookie";
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const FolderProject = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [dataProject, setDataProject] = useState([])
+  console.log(dataProject);
+  
   const [totalProject, setTotalProject] = useState(0)
   const token = Cookies.get('token');
+  const navigate = useNavigate()
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_URL}/api/projek`, { headers: { Authorization: `Bearer ${token}` } })
@@ -99,6 +103,7 @@ const FolderProject = () => {
         {dataProject.map((i) => {
           return (
             <div
+            onClick={()=>navigate(`/menu/${i.nama_folder}` , { state: i })}
               key={i}
               className="w-full bg-white rounded-2xl px-5 py-8 border border-gray-300 flex justify-between items-center"
             >
