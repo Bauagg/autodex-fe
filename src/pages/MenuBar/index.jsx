@@ -1,17 +1,19 @@
 import './style-menu.css'
 import { useEffect, useState } from "react"
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import { DashboardIcon, LeftIcon, RightIcon, LogoutIcon } from "../../GlobalComponent/icon"
 import DashboardPage from '../Dashboard'
 import axios from 'axios'
+import { Outlet } from 'react-router-dom'
 
 const MenuBar = () => {
     const [activeMenu, setActiceMenu] = useState("Dashboard")
     const [miniNav, setMiniNav] = useState(false)
     const [dataProfile, setDataProfile] = useState({})
     const navigate = useNavigate();
-
+    const { pathname } = useLocation();
+    const params = useParams
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_API_URL}/api/profil`, { headers: { Authorization: `Bearer ${Cookies.get('token')}` } })
             .then((result) => {
@@ -76,8 +78,10 @@ const MenuBar = () => {
                         </div>
                     </div>
                 </div>
-                <div className='flex-1'>
-                    {activeMenu === "Dashboard" && <DashboardPage />}
+                <div className="flex-1">
+                  
+                        <DashboardPage />
+                  
                 </div>
             </div>
         </div >
