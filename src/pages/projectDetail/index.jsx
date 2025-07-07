@@ -110,7 +110,7 @@ export default function ProjectDetail() {
             getModels();
             setData(receivedData)
         }
-    }, [selectedFile, location.state]);
+    }, [selectedFile, location]);
 
     return (
         <div className="flex bg-[#171821] w-full">

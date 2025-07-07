@@ -1,6 +1,6 @@
 import './style-menu.css'
 import { useEffect, useState } from "react"
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import { DashboardIcon, LeftIcon, RightIcon, LogoutIcon } from "../../GlobalComponent/icon"
 import DashboardPage from '../Dashboard'
