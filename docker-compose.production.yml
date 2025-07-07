@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: autodex-fe
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.production
+    restart: always
+    networks:
+      - autodex-net
+
+networks:
+  autodex-net:
+    driver: bridge

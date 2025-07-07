@@ -29,3 +29,21 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
+
+    # Notifikasi jika sukses
+    - name: Notify Discord on Success
+      if: success()
+      run: |
+        curl -H "Content-Type: application/json" \
+             -X POST \
+             -d "{\"content\": \"✅ Build SUKSES di branch \`${{ github.ref_name }}\` oleh \`${{ github.actor }}\` 🚀\"}" \
+             ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+    # Notifikasi jika gagal
+    - name: Notify Discord on Failure
+      if: failure()
+      run: |
+        curl -H "Content-Type: application/json" \
+             -X POST \
+             -d "{\"content\": \"❌ Build GAGAL di branch \`${{ github.ref_name }}\` oleh \`${{ github.actor }}\` 😢\nCek detail: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
+             ${{ secrets.DISCORD_WEBHOOK_URL }}

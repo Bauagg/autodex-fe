@@ -1,0 +1,32 @@
+# Node modules
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Env files
+.env
+.env.*  # misalnya .env.production, .env.development
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+
+# Editor/OS files
+.DS_Store
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Test & Coverage
+coverage
+__tests__/
+*.test.js
+
+# Build artifacts (jika ada folder build atau dist)
+build
+dist
