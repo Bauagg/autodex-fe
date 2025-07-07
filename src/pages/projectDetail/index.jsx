@@ -1,4 +1,20 @@
-// ... import tetap sama
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+
+import {
+  IconBell,
+  TrashIcon,
+  UploadFileIcon,
+  BlueprintIcon,
+  EyeIcon,
+  DashboardIcon,
+  LeftIcon,
+  RightIcon,
+  LogoutIcon,
+} from '../../GlobalComponent/icon';
+
 
 export default function ProjectDetail() {
     const location = useLocation();
