@@ -4,15 +4,15 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 
 import {
-  IconBell,
-  TrashIcon,
-  UploadFileIcon,
-  BlueprintIcon,
-  EyeIcon,
-  DashboardIcon,
-  LeftIcon,
-  RightIcon,
-  LogoutIcon,
+    IconBell,
+    TrashIcon,
+    UploadFileIcon,
+    BlueprintIcon,
+    EyeIcon,
+    DashboardIcon,
+    LeftIcon,
+    RightIcon,
+    LogoutIcon,
 } from '../../GlobalComponent/icon';
 
 
@@ -82,7 +82,7 @@ export default function ProjectDetail() {
         return dataProfile.name;
     }
 
-    const getModels = () => {
+    const getModels = useCallback(() => {
         const receivedData = location.state;
         axios.get(`${process.env.REACT_APP_API_URL}/api/models/${receivedData._id}`, {
             headers: { Authorization: `Bearer ${token}` }
@@ -92,7 +92,7 @@ export default function ProjectDetail() {
             alert('Could not list models. See the console for more details.');
             console.error(err);
         });
-    }
+    }, [location.state, token]);
 
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_API_URL}/api/profil`, {
@@ -108,9 +108,9 @@ export default function ProjectDetail() {
         const receivedData = location.state;
         if (receivedData) {
             getModels();
-            setData(receivedData)
+            setData(receivedData);
         }
-    }, [selectedFile, location]);
+    }, [selectedFile, location, getModels]);
 
     return (
         <div className="flex bg-[#171821] w-full">
