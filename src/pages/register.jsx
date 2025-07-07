@@ -29,7 +29,7 @@ const Register = () => {
   }
 
   const hendleEmailChange = (value) => {
-    const regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     setEmail(value);
     setMessageEmailError('')
     if (!regexEmail.test(value)) {
@@ -70,7 +70,7 @@ const Register = () => {
       return;
     }
 
-    const regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !regexEmail.test(email)) {
       setEmailError(true)
       setMessageEmailError('Email tidak valid')
